@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<h3><i>FORMULA GRID(Destination Grid)</i></h3>
+@Html.EJS().Grid("FormulaGrid").DataSource(ds => ds.Json(ViewBag.PFGridData).UpdateUrl("/Home/Update").InsertUrl("/Home/Insert").RemoveUrl("/Home/Remove").Adaptor("RemoteSaveAdaptor")).Columns(col =>
+{
+    col.Field("OrderID").HeaderText("Order ID").IsPrimaryKey(true).Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("CustomerID").HeaderText("Customer Name").Width("150").Add();
+    col.Field("Freight").HeaderText("Freight").Width("120").Format("C2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("ShipCity").HeaderText("Ship City").EditType("dropdownedit").Width("150").Add();
+}).AllowPaging().EditSettings(edit => { edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true); }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" }).AllowRowDragAndDrop().Render()
+
+<h3><i>PRODUCTO FORMULA GRID(Source Grid)</i></h3>
+
+@Html.EJS().Grid("ProductoForumlaGrid").DataSource(ds => ds.Json(ViewBag.dataSource).UpdateUrl("/Home/SrcUpdate").InsertUrl("/Home/SrcInsert").RemoveUrl("/Home/SrcRemove").Adaptor("RemoteSaveAdaptor")).Columns(col =>
+{
+    col.Field("OrderID").HeaderText("Order ID").IsPrimaryKey(true).Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("CustomerID").HeaderText("Customer Name").Width("150").Add();
+    col.Field("Freight").HeaderText("Freight").Width("120").Format("C2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("ShipCity").HeaderText("Ship City").EditType("dropdownedit").Width("150").Add();
+}).AllowPaging().EditSettings(edit => { edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true); }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" }).AllowRowDragAndDrop().RowDropSettings(new Syncfusion.EJ2.Grids.GridRowDropSettings() { TargetID = "FormulaGrid" }).RowDrop("FormulaDropAction").Render()
+
+<script>
+
+    function FormulaDropAction(args) {
+        
+        var DestGrid = document.getElementById("FormulaGrid").ej2_instances[0]
+        var SrcGrid = document.getElementById("ProductoForumlaGrid").ej2_instances[0];
+
+        var idx = parseInt(args.target.getAttribute('index'));                
+        SrcGrid.deleteRecord("OrderID", args.data);
+        DestGrid.addRecord(args.data[0], DestGrid.currentViewData.length);
+        args.cancel = true;
+    } 
+  
+</script>
